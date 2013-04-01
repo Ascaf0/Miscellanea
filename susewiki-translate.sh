@@ -5,7 +5,7 @@
 #Disclaimer: use this script at your own risk
 # susewiki-translate a script to retrieve a source openSUSE mwiki page -in lang XY- and (optionally) its translated version
 # -in lang MN- in order to start translating/update from lang XY to lang MN. It works on XY.opensuse.org Wiki articles,
-# but should be easier to adapt the script to other domains.
+# but should be easy to adapt the script to other domains.
 
 Usage() {
 echo $0' [options] source [dest; def: same of source]
@@ -36,6 +36,7 @@ exit 0
 
 exe_diff=meld
 exe_edit=kate
+wiki_dom=opensuse.org
 
 [ $# -eq 0 ] && Usage
 
@@ -78,22 +79,26 @@ destFM="${destFM//\//%2f}"
 destF="${destFM%.${dest_lang}*}"
 
 # retrieve source
+# check if file esists on server...
+wget --spider "http://${source_lang}.${wiki_dom}/index.php?title=${sourceF}&stable=0&redirect=no&action=raw" || exit 1
 [ -f "$sourceFM" ] && {
 [ "$clean_f" ] && rm "$sourceF".+\([0-9][0-9]\).${source_lang}.mwiki
 sourceFM_old="$sourceF.$(date -u +%s).${source_lang}.mwiki"
 cp "$sourceFM" "$sourceFM_old"
 }
 # NB: &stable=0&redirect=no should be superfluous (and useless)
-wget -O "${sourceFM}" "http://${source_lang}.opensuse.org/index.php?title=${sourceF}&stable=0&redirect=no&action=raw" || exit 1
+wget -O "${sourceFM}" "http://${source_lang}.${wiki_dom}/index.php?title=${sourceF}&stable=0&redirect=no&action=raw" || exit 1
 
 #retrieve destination
 [ -f "$destFM" ] && {
 [ "$clean_f" ] && rm "$destF".+\([0-9][0-9]\).${dest_lang}.mwiki
 destFM_old="$destF.$(date -u +%s).${dest_lang}.mwiki"
 cp "$destFM" "$destFM_old"
-} || cp "$sourceFM" "$destFM" # donnow yet if destFM exist on server, therefore copy source to destination...
+} || cp "$sourceFM" "$destFM" # we don't know yet if destFM exist on server, therefore copy source to destination...
 # ...it will be overwritten if a remote copy of destination really exists
-wget -O "${destFM}" "http://${dest_lang}.opensuse.org/index.php?title=${destF}&stable=0&redirect=no&action=raw"
+# check if file exists on server...
+wget --spider "http://${dest_lang}.${wiki_dom}/index.php?title=${destF}&stable=0&redirect=no&action=raw" && \
+wget -O "${destFM}" "http://${dest_lang}.${wiki_dom}/index.php?title=${destF}&stable=0&redirect=no&action=raw"
 
 $exe_diff "$sourceFM_old" "$sourceFM" &
 $exe_diff "$sourceFM" "$destFM" &
