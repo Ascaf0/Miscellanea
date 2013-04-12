@@ -1,0 +1,29 @@
+Author: acsaf
+Licene: GPL-3.0+
+Disclaimer: use this script at your own risk
+susewiki-translate a script to retrieve a source openSUSE mwiki page -in lang XY- and (optionally) its translated version
+-in lang MN- in order to start translating/update from lang XY to lang MN. It works on XY.opensuse.org Wiki articles,
+but should be easy to adapt the script to other domains.
+
+Basic usage:
+Install meld (while you are "diffing" files with you can edit them directly wihtin the program)
+
+Install kate
+OR
+modify exe_edit=kate inside susewiki-translate.sh to feet your needs
+for example replace kate with gedit (as in modify exe_edit=gedit)
+
+run
+./susewiki-translate.sh --help
+for additional help, OR just try (of course you can set source and destination languages with appripriate command options)
+./susewiki-translate.sh 'Portal:12.3/Intro' 'Portal:12.3/Intro'
+(or just: ./susewiki-translate.sh 'Portal:12.3/Intro'
+since source and destination have the same name)
+3 instances of meld will be open:
+#one comparing en:Portal:12.3/Intro (just downloaded) with its previous version stored (if available)
+#one comparing current en:Portal:12.3/Intro with current it:Portal:12.3/Intro (if you are translating that page for the first time it will be a copu of en:Portal:12.3/Intro, otherwise it:Portal:12.3/Intro will be retrieved from remote server)
+#one compare en:Portal:12.3/Intro(old copy) en:Portal:12.3/Intro(current) end it:Portal:12.3/Intro. It sould be useful to immediatly see differences to apply to it:Portal:12.3/Intro, most of all if it:Portal:12.3/Intro would be in sync with en:Portal:12.3/Intro(old copy)
+# finally it:Portal:12.3/Intro will be open in your prefered editor.
+
+Other full example (this time we are translating from 中文(台灣)‬ to Deutsch and destination title is translated, aka different from sourcepage, please consider redirect are treated as full page and NOT resolved). It cleans old temp file, as well:
+./susewiki-translate.sh --clean --source-lang zh-tw --dest-lang de 'Portal:12.2/Features' 'Portal:12.2/Funktionen'

@@ -35,7 +35,7 @@ exit 0
 }
 
 exe_diff=meld
-exe_edit=kate
+exe_edit='kate -s susewiki'
 wiki_dom=opensuse.org
 
 [ $# -eq 0 ] && Usage
@@ -82,7 +82,9 @@ destF="${destFM%.${dest_lang}*}"
 # check if file esists on server...
 wget --spider "http://${source_lang}.${wiki_dom}/index.php?title=${sourceF}&stable=0&redirect=no&action=raw" || exit 1
 [ -f "$sourceFM" ] && {
-[ "$clean_f" ] && rm "$sourceF".+\([0-9][0-9]\).${source_lang}.mwiki
+[ "$clean_f" ] && {
+find -mindepth 1 -maxdepth 1 -type f -regex ".*$sourceF\.[0-9]+\.${source_lang}\.mwiki" -exec rm '{}' \+
+}
 sourceFM_old="$sourceF.$(date -u +%s).${source_lang}.mwiki"
 cp "$sourceFM" "$sourceFM_old"
 }
@@ -91,7 +93,9 @@ wget -O "${sourceFM}" "http://${source_lang}.${wiki_dom}/index.php?title=${sourc
 
 #retrieve destination
 [ -f "$destFM" ] && {
-[ "$clean_f" ] && rm "$destF".+\([0-9][0-9]\).${dest_lang}.mwiki
+[ "$clean_f" ] && {
+find -mindepth 1 -maxdepth 1 -type f -regex ".*$destF\.[0-9]+\.${dest_lang}\.mwiki" -exec rm '{}' \+
+}
 destFM_old="$destF.$(date -u +%s).${dest_lang}.mwiki"
 cp "$destFM" "$destFM_old"
 } || cp "$sourceFM" "$destFM" # we don't know yet if destFM exist on server, therefore copy source to destination...
@@ -100,7 +104,10 @@ cp "$destFM" "$destFM_old"
 wget --spider "http://${dest_lang}.${wiki_dom}/index.php?title=${destF}&stable=0&redirect=no&action=raw" && \
 wget -O "${destFM}" "http://${dest_lang}.${wiki_dom}/index.php?title=${destF}&stable=0&redirect=no&action=raw"
 
+exec 2>/dev/null
+[ -f "$sourceFM_old" ] && {
 $exe_diff "$sourceFM_old" "$sourceFM" &
-$exe_diff "$sourceFM" "$destFM" &
 $exe_diff "$sourceFM_old" "$sourceFM" "$destFM" &
-exec $exe_edit "$destFM"
+}
+$exe_diff "$sourceFM" "$destFM" &
+$exe_edit "$destFM" &
