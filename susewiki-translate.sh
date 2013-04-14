@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Author: acsaf
-#Licene: GPL-3.0+
+#License: GPL-3.0+
 #Disclaimer: use this script at your own risk
 # susewiki-translate a script to retrieve a source openSUSE mwiki page -in lang XY- and (optionally) its translated version
 # -in lang MN- in order to start translating/update from lang XY to lang MN. It works on XY.opensuse.org Wiki articles,
@@ -79,7 +79,7 @@ destFM="${destFM//\//%2f}"
 destF="${destFM%.${dest_lang}*}"
 
 # retrieve source
-# check if file esists on server...
+# check if file exists on server...
 wget --spider "http://${source_lang}.${wiki_dom}/index.php?title=${sourceF}&stable=0&redirect=no&action=raw" || exit 1
 [ -f "$sourceFM" ] && {
 [ "$clean_f" ] && {
