@@ -1,0 +1,13 @@
+[Desktop Action mountiso]
+Exec=mntDir=`kdialog --getexistingdirectory $(mktemp -d)`; xdg-su -c "mount -o loop,users %u $mntDir"; exec dolphin $mntDir;
+Icon=application-x-cd-image
+Name=Mount ISO
+Name[it]=Monta immagine ISO
+Name[es]=Montar ISO
+
+[Desktop Entry]
+Actions=mountiso
+# Icon=media-optical
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/x-cd-image;
+Type=Service

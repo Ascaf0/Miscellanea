@@ -1,0 +1,25 @@
+A (slightly) modified version of Simple mount Iso service menu 1.0 (Sep 26 2012), see http://kde-apps.org/content/show.php?content=148881
+Changes since then:
+- default mount directory is now a mktemp-created directory (therefore under /tmp or $TMPDIR)
+- use xdg-su to su-launch command
+
+So:
+
+LOCAL INSTALL:
+copy 148881-mountIso.desktop to $HOME/.kde4/share/kde4/services/ServiceMenus
+(correct local ServiceMenus location might change, you might retrieve that with command:
+
+kde4-config --path services | sed "s|.*\($HOME[^:]\+\):.*|\1|"
+OR, if working:
+kde4-config --userpath services
+
+MOUNT:
+- right click on iso image
+- select "Actions" -> "Mount iso" (italiano: Azioni > Monta immagine iso)
+- select folder where mount, or accept the default folder (probably something like /tmp/tmp.XXXXXXXXXX)
+- insert root password
+- mounted!
+
+UNMOUNT:
+- on dolphin (at least on KDE >= 4.8.x) Right click on mounted image from panel Places, then click "Unmount" (italiano: clic destro su immagine montata nel pannello Risorse --> Smonta...)
+- insert root password whence required
