@@ -9,9 +9,14 @@ LOCAL INSTALL:
 copy 148881-mountIso.desktop to $HOME/.kde4/share/kde4/services/ServiceMenus
 (correct local ServiceMenus location might change, you might retrieve that with command:
 
-kde4-config --path services | sed "s|.*\($HOME[^:]\+\):.*|\1|"
+kde4-config --path services | tr ':' '\n' | grep $HOME
 OR, if working:
 kde4-config --userpath services
+
+GLOBAL INSTALL:
+use /usr/share/kde4/services/ServiceMenus
+or, retrieve your shared location from
+kde4-config --path services | tr ':' '\n'
 
 MOUNT:
 - right click on iso image
